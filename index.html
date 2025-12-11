@@ -1,0 +1,2332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chip Architecture Innovation Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #00ff88;
+            padding: 1%;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 1.2em;
+            color: #00d4ff;
+            border-bottom: 2px solid #00ff88;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        
+        h2 {
+            font-size: 1em;
+            color: #ffd700;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            border-left: 3px solid #00ff88;
+            padding-left: 8px;
+        }
+        
+        h3 {
+            font-size: 0.9em;
+            color: #ff6b6b;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        
+        h4 {
+            font-size: 0.85em;
+            color: #00d4ff;
+            margin-top: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .section {
+            background: rgba(22, 33, 62, 0.6);
+            border: 1px solid #00ff88;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+        
+        .circuit-border {
+            border: 2px dashed #00d4ff;
+            padding: 10px;
+            margin: 8px 0;
+            background: rgba(0, 212, 255, 0.05);
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 5px;
+            margin-bottom: 8px;
+        }
+        
+        li {
+            margin-bottom: 5px;
+            color: #e0e0e0;
+        }
+        
+        .highlight {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), transparent);
+            padding: 8px;
+            border-left: 3px solid #ffd700;
+            margin: 8px 0;
+        }
+        
+        .patent-tip {
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid #ff6b6b;
+            padding: 8px;
+            border-radius: 5px;
+            margin: 8px 0;
+            font-size: 0.85em;
+        }
+        
+        .pro-tip {
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid #8a2be2;
+            padding: 8px;
+            border-radius: 5px;
+            margin: 8px 0;
+            font-size: 0.85em;
+            color: #dda0ff;
+        }
+        
+        .chip-diagram {
+            background: #0a0a0a;
+            border: 2px solid #00ff88;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 0.75em;
+            overflow-x: auto;
+        }
+        
+        .code-example {
+            background: #1a1a1a;
+            border-left: 4px solid #00ff88;
+            padding: 10px;
+            margin: 8px 0;
+            font-family: monospace;
+            font-size: 0.8em;
+            overflow-x: auto;
+            color: #f0f0f0;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            color: #000;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85em;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .phase {
+            display: none;
+        }
+        
+        .phase.active {
+            display: block;
+        }
+        
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            height: 6px;
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            height: 100%;
+            transition: width 0.3s;
+        }
+        
+        .checklist {
+            list-style: none;
+            margin-left: 0;
+        }
+        
+        .checklist li:before {
+            content: "▢ ";
+            color: #00ff88;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #ff6b6b;
+            font-size: 0.85em;
+        }
+        
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border-left: 3px solid #ffc107;
+            padding: 8px;
+            margin: 8px 0;
+            color: #ffc107;
+        }
+        
+        .step-box {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+        }
+        
+        .trick-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0;
+            font-size: 0.8em;
+        }
+        
+        table td, table th {
+            border: 1px solid #00ff88;
+            padding: 6px;
+            text-align: left;
+        }
+        
+        table th {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ CHIP ARCHITECTURE INNOVATION GUIDE</h1>
+        
+        <div style="text-align: center; margin-bottom: 15px;">
+            <button class="nav-btn" onclick="showPhase(1)">Ideation</button>
+            <button class="nav-btn" onclick="showPhase(2)">Design</button>
+            <button class="nav-btn" onclick="showPhase(3)">RTL Coding</button>
+            <button class="nav-btn" onclick="showPhase(4)">Validation</button>
+            <button class="nav-btn" onclick="showPhase(5)">Patent</button>
+            <button class="nav-btn" onclick="showPhase(6)">Resources</button>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress" style="width: 16%"></div>
+        </div>
+        
+        <!-- PHASE 1: IDEATION -->
+        <div class="phase active" id="phase1">
+            <div class="section">
+                <h2>🧠 Phase 1: Ideation & Concept Development</h2>
+                
+                <div class="highlight">
+                    <strong>Goal:</strong> Identify gaps in existing architectures and conceptualize breakthrough innovations.
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 1: Problem Identification (Week 1-2)</h3>
+                    <h4>Actions:</h4>
+                    <ol>
+                        <li>Create a problem statement document</li>
+                        <li>List 10+ current chip limitations you've observed</li>
+                        <li>Interview 5+ potential users/engineers about pain points</li>
+                        <li>Analyze 20+ recent research papers from top conferences</li>
+                    </ol>
+                    
+                    <div class="pro-tip">
+                        <strong>💡 CACHE SIZING TRICK:</strong> Use the "Rule of Thirds" - L1 = working set / 3, L2 = working set, L3 = 3x working set. Measure working set from your target applications.
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 4: Power & Performance Modeling (Week 12-14)</h3>
+                    
+                    <h4>Power Estimation Formula:</h4>
+                    <div class="code-example">
+Total Power = Dynamic + Static + Leakage
+
+Dynamic Power = α × C × V² × f
+  α = activity factor (0.1-0.5)
+  C = capacitance (pF)
+  V = voltage (0.7-1.2V)
+  f = frequency (GHz)
+
+Static Power = V × Ileakage
+  
+Leakage Power = V × (Isubthreshold + Igate)
+
+EXAMPLE CALCULATION (7nm, 3GHz core):
+- Dynamic: 0.3 × 50pF × 0.8² × 3GHz = 28.8W
+- Static: 0.8V × 2A = 1.6W  
+- Leakage: 0.8V × 0.5A = 0.4W
+- TOTAL: ~31W per core
+                    </div>
+                    
+                    <h4>Performance Estimation:</h4>
+                    <div class="code-example">
+IPC = Instructions / Cycle
+
+Theoretical Max IPC = Issue Width
+Realistic IPC = 0.5-2.5 for general workloads
+
+Throughput = IPC × Frequency × Cores
+
+EXAMPLE:
+- 4-issue width, 3GHz, 8 cores
+- Realistic IPC: 1.8
+- Throughput: 1.8 × 3 × 8 = 43.2 billion instructions/sec
+                    </div>
+                </div>
+                
+                <ul class="checklist">
+                    <li>Created comprehensive block diagram with all components</li>
+                    <li>Specified pipeline stages and execution units</li>
+                    <li>Designed memory hierarchy with sizes and latencies</li>
+                    <li>Defined interconnect topology and protocols</li>
+                    <li>Calculated estimated power and performance</li>
+                    <li>Documented all design decisions with rationale</li>
+                    <li>Created 50+ page architecture specification</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- PHASE 3: RTL CODING -->
+        <div class="phase" id="phase3">
+            <div class="section">
+                <h2>💻 Phase 3: RTL Coding (Verilog/VHDL)</h2>
+                
+                <div class="highlight">
+                    <strong>Goal:</strong> Translate architecture into synthesizable RTL code
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 1: Setup Development Environment (Week 15)</h3>
+                    
+                    <h4>Install Essential Tools:</h4>
+                    <ol>
+                        <li><strong>Simulator:</strong> Icarus Verilog (free) or ModelSim</li>
+                        <li><strong>Waveform Viewer:</strong> GTKWave (free)</li>
+                        <li><strong>Text Editor:</strong> VSCode with Verilog extensions</li>
+                        <li><strong>Version Control:</strong> Git + GitHub</li>
+                        <li><strong>Build System:</strong> Make or CMake</li>
+                    </ol>
+                    
+                    <div class="code-example">
+# Install on Linux/Mac:
+sudo apt-get install iverilog gtkwave
+
+# Install VSCode extensions:
+- Verilog-HDL/SystemVerilog
+- WaveTrace
+- TerosHDL
+
+# Create project structure:
+mkdir chip_project
+cd chip_project
+git init
+mkdir rtl tb sim doc
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 2: Start with Simple Modules (Week 15-16)</h3>
+                    
+                    <div class="pro-tip">
+                        <strong>💡 CODING STRATEGY:</strong> Bottom-up approach. Start with leaf modules (adders, muxes), then build larger blocks. Test each module before integration.
+                    </div>
+                    
+                    <h4>Module 1: Basic ALU</h4>
+                    <div class="code-example">
+// File: rtl/alu.v
+// Simple 32-bit ALU with 4 operations
+
+module alu #(
+    parameter WIDTH = 32
+)(
+    input  [WIDTH-1:0] a,      // Operand A
+    input  [WIDTH-1:0] b,      // Operand B
+    input  [1:0]       op,     // Operation select
+    output reg [WIDTH-1:0] result,
+    output reg         zero    // Zero flag
+);
+
+// Operation encoding:
+// 00: ADD
+// 01: SUB  
+// 10: AND
+// 11: OR
+
+always @(*) begin
+    case (op)
+        2'b00: result = a + b;           // ADD
+        2'b01: result = a - b;           // SUB
+        2'b10: result = a & b;           // AND
+        2'b11: result = a | b;           // OR
+        default: result = {WIDTH{1'b0}};
+    endcase
+    
+    zero = (result == 0);
+end
+
+endmodule
+                    </div>
+                    
+                    <h4>Module 2: Register File</h4>
+                    <div class="code-example">
+// File: rtl/regfile.v
+// 32 x 32-bit register file with 2R1W ports
+
+module regfile (
+    input         clk,
+    input         rst_n,
+    
+    // Read ports
+    input  [4:0]  rd_addr1,
+    input  [4:0]  rd_addr2,
+    output [31:0] rd_data1,
+    output [31:0] rd_data2,
+    
+    // Write port
+    input  [4:0]  wr_addr,
+    input  [31:0] wr_data,
+    input         wr_en
+);
+
+// 32 registers, x0 is hardwired to 0
+reg [31:0] regs [1:31];
+integer i;
+
+// Asynchronous read
+assign rd_data1 = (rd_addr1 == 0) ? 32'h0 : regs[rd_addr1];
+assign rd_data2 = (rd_addr2 == 0) ? 32'h0 : regs[rd_addr2];
+
+// Synchronous write
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        for (i = 1; i < 32; i = i + 1)
+            regs[i] <= 32'h0;
+    end else if (wr_en && wr_addr != 0) begin
+        regs[wr_addr] <= wr_data;
+    end
+end
+
+endmodule
+                    </div>
+                    
+                    <div class="trick-box">
+                        <strong>🎯 CODING TRICKS:</strong>
+                        <ul>
+                            <li>Use parameters for configurability</li>
+                            <li>Add comments for every module/signal</li>
+                            <li>Follow consistent naming: snake_case for signals</li>
+                            <li>Use _n suffix for active-low signals</li>
+                            <li>Avoid latches: always specify all branches in always @(*)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 3: Build Pipeline Stages (Week 17-20)</h3>
+                    
+                    <h4>Module 3: Instruction Fetch Stage</h4>
+                    <div class="code-example">
+// File: rtl/fetch.v
+// Instruction fetch stage with branch prediction
+
+module fetch (
+    input         clk,
+    input         rst_n,
+    
+    // Control signals
+    input         stall,
+    input         branch_taken,
+    input  [31:0] branch_target,
+    
+    // Instruction memory interface
+    output [31:0] imem_addr,
+    input  [31:0] imem_data,
+    input         imem_valid,
+    
+    // To decode stage
+    output reg [31:0] pc_out,
+    output reg [31:0] instr_out,
+    output reg        valid_out
+);
+
+reg [31:0] pc;
+reg [31:0] pc_next;
+
+// PC update logic
+always @(*) begin
+    if (branch_taken)
+        pc_next = branch_target;
+    else if (!stall)
+        pc_next = pc + 4;
+    else
+        pc_next = pc;
+end
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        pc <= 32'h0;
+        pc_out <= 32'h0;
+        instr_out <= 32'h0;
+        valid_out <= 1'b0;
+    end else begin
+        pc <= pc_next;
+        
+        if (!stall && imem_valid) begin
+            pc_out <= pc;
+            instr_out <= imem_data;
+            valid_out <= 1'b1;
+        end else if (branch_taken) begin
+            valid_out <= 1'b0;  // Flush
+        end
+    end
+end
+
+assign imem_addr = pc;
+
+endmodule
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 4: Create Testbenches (Week 18-21)</h3>
+                    
+                    <div class="warning">
+                        <strong>⚠️ TESTING IS CRITICAL:</strong> 70% of your time should be testing! Bugs found in simulation are 100x cheaper to fix than in silicon.
+                    </div>
+                    
+                    <h4>Testbench Template:</h4>
+                    <div class="code-example">
+// File: tb/alu_tb.v
+// Testbench for ALU module
+
+`timescale 1ns/1ps
+
+module alu_tb;
+
+// Signals
+reg  [31:0] a, b;
+reg  [1:0]  op;
+wire [31:0] result;
+wire        zero;
+
+// Instantiate DUT (Device Under Test)
+alu #(.WIDTH(32)) dut (
+    .a(a),
+    .b(b),
+    .op(op),
+    .result(result),
+    .zero(zero)
+);
+
+// Test stimulus
+initial begin
+    $dumpfile("alu_tb.vcd");
+    $dumpvars(0, alu_tb);
+    
+    // Test ADD
+    a = 32'd10; b = 32'd20; op = 2'b00;
+    #10;
+    assert(result == 32'd30) else $error("ADD failed");
+    
+    // Test SUB
+    a = 32'd50; b = 32'd30; op = 2'b01;
+    #10;
+    assert(result == 32'd20) else $error("SUB failed");
+    
+    // Test AND
+    a = 32'hFF00; b = 32'h0FF0; op = 2'b10;
+    #10;
+    assert(result == 32'h0F00) else $error("AND failed");
+    
+    // Test OR
+    a = 32'hF000; b = 32'h0F00; op = 2'b11;
+    #10;
+    assert(result == 32'hFF00) else $error("OR failed");
+    
+    // Test zero flag
+    a = 32'd5; b = 32'd5; op = 2'b01;
+    #10;
+    assert(zero == 1'b1) else $error("Zero flag failed");
+    
+    $display("All tests passed!");
+    $finish;
+end
+
+endmodule
+                    </div>
+                    
+                    <h4>Running Simulation:</h4>
+                    <div class="code-example">
+# Compile and simulate with Icarus Verilog
+iverilog -o alu_tb.vvp rtl/alu.v tb/alu_tb.v
+vvp alu_tb.vvp
+
+# View waveforms
+gtkwave alu_tb.vcd
+                    </div>
+                    
+                    <div class="pro-tip">
+                        <strong>💡 VERIFICATION TIPS:</strong>
+                        <ul>
+                            <li>Write testbench BEFORE RTL (TDD approach)</li>
+                            <li>Use assertions for automatic checking</li>
+                            <li>Test corner cases: 0, max, overflow</li>
+                            <li>Use constrained random testing for complex modules</li>
+                            <li>Achieve >95% code coverage</li>
+                            <li>Use SystemVerilog for advanced testbenches</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 5: Integration & Top-Level (Week 22-24)</h3>
+                    
+                    <h4>Top-Level Module Structure:</h4>
+                    <div class="code-example">
+// File: rtl/chip_top.v
+// Top-level chip integration
+
+module chip_top (
+    // Clock and reset
+    input         clk,
+    input         rst_n,
+    
+    // External memory interface
+    output [31:0] mem_addr,
+    inout  [31:0] mem_data,
+    output        mem_we,
+    output        mem_oe,
+    
+    // I/O interface
+    input  [31:0] gpio_in,
+    output [31:0] gpio_out
+);
+
+// Internal signals
+wire [31:0] pc;
+wire [31:0] instr;
+wire [31:0] alu_result;
+// ... more signals ...
+
+// Instantiate pipeline stages
+fetch fetch_stage (
+    .clk(clk),
+    .rst_n(rst_n),
+    // ... connections ...
+);
+
+decode decode_stage (
+    // ... connections ...
+);
+
+execute execute_stage (
+    // ... connections ...
+);
+
+memory mem_stage (
+    // ... connections ...
+);
+
+writeback wb_stage (
+    // ... connections ...
+);
+
+// Instantiate caches, interconnect, etc.
+
+endmodule
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 6: Synthesis & Optimization (Week 25-26)</h3>
+                    
+                    <div class="circuit-border">
+                        <h4>Synthesis Checklist:</h4>
+                        <ul>
+                            <li>☐ Remove all race conditions</li>
+                            <li>☐ Eliminate latches (use default cases)</li>
+                            <li>☐ Avoid combinational loops</li>
+                            <li>☐ Use synchronous resets (or async with sync release)</li>
+                            <li>☐ Clock domain crossing handled properly</li>
+                            <li>☐ No multi-driven nets</li>
+                            <li>☐ Timing constraints specified</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>Common Synthesis Commands (Yosys):</h4>
+                    <div class="code-example">
+# File: synth.ys
+# Yosys synthesis script
+
+read_verilog rtl/*.v
+hierarchy -top chip_top
+proc
+opt
+fsm
+opt
+memory
+opt
+techmap
+opt
+abc -liberty tech/library.lib
+opt
+clean
+write_verilog synth_chip.v
+stat
+                    </div>
+                    
+                    <div class="trick-box">
+                        <strong>🎯 OPTIMIZATION TRICKS:</strong>
+                        <ul>
+                            <li>Pipeline long combinational paths (>20 gates)</li>
+                            <li>Use retiming to balance pipeline stages</li>
+                            <li>Add clock gating for power savings</li>
+                            <li>Use muxes instead of tri-states internally</li>
+                            <li>Flatten small modules for better optimization</li>
+                            <li>Use vendor-specific IP for critical blocks (e.g., multipliers)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <ul class="checklist">
+                    <li>Set up complete development environment</li>
+                    <li>Coded all basic building blocks with tests</li>
+                    <li>Implemented full pipeline stages</li>
+                    <li>Created comprehensive testbenches</li>
+                    <li>Achieved >90% functional coverage</li>
+                    <li>Integrated all modules into top-level</li>
+                    <li>Synthesized design successfully</li>
+                    <li>Met timing constraints</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- PHASE 4: VALIDATION -->
+        <div class="phase" id="phase4">
+            <div class="section">
+                <h2>✅ Phase 4: Validation & Prototyping</h2>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 1: Functional Verification (Week 27-30)</h3>
+                    
+                    <h4>Verification Strategy:</h4>
+                    <ol>
+                        <li><strong>Unit Testing:</strong> Each module individually</li>
+                        <li><strong>Integration Testing:</strong> Module combinations</li>
+                        <li><strong>System Testing:</strong> Full chip with real programs</li>
+                        <li><strong>Regression Testing:</strong> Automated nightly builds</li>
+                    </ol>
+                    
+                    <div class="code-example">
+VERIFICATION LEVELS:
+
+Level 0: Syntax check (compile without errors)
+Level 1: Basic smoke test (chip doesn't hang)
+Level 2: Instruction set test (all opcodes work)
+Level 3: Benchmark programs (sorting, FFT, etc.)
+Level 4: Operating system boot (Linux, FreeRTOS)
+Level 5: Application workloads (real use cases)
+                    </div>
+                    
+                    <div class="pro-tip">
+                        <strong>💡 VERIFICATION TRICK:</strong> Create a "golden model" in C/Python that matches your RTL behavior. Compare outputs for every test case.
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 2: Performance Simulation (Week 30-32)</h3>
+                    
+                    <h4>Key Metrics to Measure:</h4>
+                    <table>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Tool</th>
+                            <th>Target</th>
+                        </tr>
+                        <tr>
+                            <td>IPC</td>
+                            <td>gem5, custom</td>
+                            <td>>1.5 for general</td>
+                        </tr>
+                        <tr>
+                            <td>Cache Hit Rate</td>
+                            <td>Cachegrind</td>
+                            <td>>95% L1, >80% L2</td>
+                        </tr>
+                        <tr>
+                            <td>Branch Prediction</td>
+                            <td>Custom counters</td>
+                            <td>>90% accuracy</td>
+                        </tr>
+                        <tr>
+                            <td>Memory Bandwidth</td>
+                            <td>McPAT</td>
+                            <td>Match spec</td>
+                        </tr>
+                    </table>
+                    
+                    <h4>Running Benchmarks:</h4>
+                    <div class="code-example">
+# SPEC CPU2017 (if available)
+runcpu --config=myconfig.cfg --size=test intrate
+
+# CoreMark (embedded)
+make PORT_DIR=riscv XCFLAGS="-O3"
+./coremark.exe
+
+# MLPerf (AI workloads)
+python run_mlperf.py --model=resnet50
+
+# Custom microbenchmarks
+./run_all_tests.sh
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 3: Power Analysis (Week 32-34)</h3>
+                    
+                    <div class="circuit-border">
+                        <h4>Power Analysis Flow:</h4>
+                        <ol>
+                            <li>Extract switching activity from simulation</li>
+                            <li>Annotate RTL with activity data</li>
+                            <li>Run power estimation tool (PrimeTime PX, Joules)</li>
+                            <li>Analyze power breakdown by module</li>
+                            <li>Optimize hot spots</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="code-example">
+POWER BREAKDOWN EXAMPLE:
+────────────────────────────────
+Component        | Power (W) | %    
+─────────────────|───────────|─────
+CPU Cores        | 12.5      | 41%
+L2 Cache         | 4.2       | 14%
+L3 Cache         | 3.8       | 13%
+Interconnect     | 2.1       | 7%
+Memory Ctrl      | 1.8       | 6%
+NPU              | 5.4       | 18%
+Other            | 0.5       | 2%
+─────────────────|───────────|─────
+TOTAL            | 30.3      | 100%
+                    </div>
+                    
+                    <div class="trick-box">
+                        <strong>🎯 POWER OPTIMIZATION TRICKS:</strong>
+                        <ul>
+                            <li>Clock gate idle units (can save 20-40%)</li>
+                            <li>Power gate unused cores</li>
+                            <li>DVFS: Scale voltage/frequency with workload</li>
+                            <li>Optimize switching activity in data paths</li>
+                            <li>Use operand isolation for unused units</li>
+                            <li>Size wires/gates appropriately (no over-sizing)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 4: FPGA Prototyping (Week 35-40)</h3>
+                    
+                    <div class="warning">
+                        <strong>⚠️ IMPORTANT:</strong> FPGA prototype validates your design at speed with real workloads. Critical before tape-out!
+                    </div>
+                    
+                    <h4>FPGA Selection:</h4>
+                    <ul>
+                        <li><strong>Xilinx Virtex UltraScale+:</strong> High-end, lots of resources</li>
+                        <li><strong>Intel Stratix 10:</strong> Alternative to Xilinx</li>
+                        <li><strong>Xilinx Kintex-7:</strong> Mid-range, good price/perf</li>
+                        <li><strong>Lattice ECP5:</strong> Open-source tools, cheaper</li>
+                    </ul>
+                    
+                    <h4>FPGA Implementation Flow:</h4>
+                    <div class="code-example">
+# Vivado flow (Xilinx)
+1. Create project
+   vivado -mode batch -source create_proj.tcl
+
+2. Add RTL files and constraints
+   add_files rtl/*.v
+   add_files constraints.xdc
+
+3. Synthesize
+   synth_design -top chip_top
+
+4. Implement (place & route)
+   opt_design
+   place_design
+   route_design
+
+5. Generate bitstream
+   write_bitstream chip.bit
+
+6. Program FPGA
+   program_hw_device chip.bit
+                    </div>
+                    
+                    <div class="pro-tip">
+                        <strong>💡 FPGA TIPS:</strong>
+                        <ul>
+                            <li>Start with lower clock speed (50-100MHz), increase gradually</li>
+                            <li>Use ChipScope/ILA for debugging</li>
+                            <li>Add LED indicators for critical signals</li>
+                            <li>Test with real peripherals (UART, SPI, I2C)</li>
+                            <li>Run for hours to catch rare bugs</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <ul class="checklist">
+                    <li>Completed comprehensive functional verification</li>
+                    <li>Ran full benchmark suite successfully</li>
+                    <li>Validated performance targets met</li>
+                    <li>Analyzed and optimized power consumption</li>
+                    <li>Built working FPGA prototype</li>
+                    <li>Tested with real applications</li>
+                    <li>Found and fixed all major bugs</li>
+                    <li>Ready for tape-out decision</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- PHASE 5: PATENT -->
+        <div class="phase" id="phase5">
+            <div class="section">
+                <h2>📜 Phase 5: Patent Strategy & Filing</h2>
+                
+                <div class="warning">
+                    <strong>⚠️ CRITICAL:</strong> File provisional patent BEFORE any public disclosure (papers, presentations, demos). You have 12 months to file full patent.
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 1: Identify Patentable Innovations (Week 41-42)</h3>
+                    
+                    <h4>What Makes Chip Architecture Patentable?</h4>
+                    <div class="highlight">
+                        <strong>Three Requirements (ALL must be met):</strong>
+                        <ol>
+                            <li><strong>Novel:</strong> Not disclosed in prior art</li>
+                            <li><strong>Non-obvious:</strong> Not obvious to skilled engineer</li>
+                            <li><strong>Useful:</strong> Solves real problem with measurable benefit</li>
+                        </ol>
+                    </div>
+                    
+                    <h4>Patentability Checklist:</h4>
+                    <div class="checklist">
+                        <li>Innovation provides >10% improvement in key metric</li>
+                        <li>No existing patent uses same approach</li>
+                        <li>Solution is not obvious combination of known techniques</li>
+                        <li>Concrete implementation (not abstract idea)</li>
+                        <li>Enables specific technical effect</li>
+                    </div>
+                    
+                    <h4>Example Patentable vs. Non-Patentable:</h4>
+                    <table>
+                        <tr>
+                            <th>✅ Patentable</th>
+                            <th>❌ Not Patentable</th>
+                        </tr>
+                        <tr>
+                            <td>"Cache with predictive prefetcher using neural network"</td>
+                            <td>"Faster cache" (too vague)</td>
+                        </tr>
+                        <tr>
+                            <td>"Processing-in-memory DRAM with embedded MAC units in sense amplifiers"</td>
+                            <td>"Do computation near memory" (abstract)</td>
+                        </tr>
+                        <tr>
+                            <td>"Optical interconnect using silicon photonic waveguides with specific wavelength division multiplexing"</td>
+                            <td>"Use light for communication" (too broad)</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 2: Comprehensive Prior Art Search (Week 42-44)</h3>
+                    
+                    <div class="circuit-border">
+                        <h4>Search Strategy (Spend 40+ Hours):</h4>
+                        
+                        <strong>A. Patent Databases:</strong>
+                        <ol>
+                            <li><strong>USPTO (patents.uspto.gov)</strong>
+                                <ul>
+                                    <li>Use CPC classification codes:
+                                        <ul>
+                                            <li>G06F 9/30 - Instruction processing</li>
+                                            <li>G06F 12/08 - Cache memory</li>
+                                            <li>G06F 15/80 - Parallel processors</li>
+                                            <li>H01L 25/00 - Semiconductor assemblies</li>
+                                        </ul>
+                                    </li>
+                                    <li>Search assignees: Intel, AMD, NVIDIA, ARM, IBM, Samsung, TSMC</li>
+                                </ul>
+                            </li>
+                            <li><strong>Google Patents (patents.google.com)</strong>
+                                <ul>
+                                    <li>Better UI, includes worldwide patents</li>
+                                    <li>Use "Similar" feature to find related patents</li>
+                                    <li>Check forward/backward citations</li>
+                                </ul>
+                            </li>
+                            <li><strong>Espacenet (worldwide.espacenet.com)</strong>
+                                <ul>
+                                    <li>European patents</li>
+                                    <li>Machine translation available</li>
+                                </ul>
+                            </li>
+                        </ol>
+                        
+                        <strong>B. Academic Literature:</strong>
+                        <ul>
+                            <li>IEEE Xplore - ISCA, MICRO, ISSCC, HPCA papers</li>
+                            <li>ACM Digital Library - ASPLOS, ISCA proceedings</li>
+                            <li>ArXiv.org - cs.AR category</li>
+                            <li>Google Scholar - set up alerts</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="code-example">
+SEARCH QUERY EXAMPLES:
+
+Basic: "processing in memory" OR "compute in memory"
+
+With operators:
+("cache" OR "buffer") AND ("prefetch" OR "speculation") 
+AND ("neural" OR "learning" OR "prediction")
+
+CPC code search:
+CPC=G06F12/08 AND "machine learning"
+
+Assignee search:
+assignee:Intel AND "interconnect" AND "photonic"
+
+Date range:
+("AI accelerator") AND publicationDate:[20200101 TO 20241231]
+                    </div>
+                    
+                    <div class="trick-box">
+                        <strong>🎯 SEARCH TRICKS:</strong>
+                        <ul>
+                            <li>Use wildcards: "proces*" finds process, processing, processor</li>
+                            <li>Look at patent families (continuations, divisionals)</li>
+                            <li>Check expired patents - you can freely use them!</li>
+                            <li>Read full patent, not just abstract</li>
+                            <li>Pay attention to claims - that's the legal boundary</li>
+                            <li>Keep detailed notes in spreadsheet with columns:
+                                <ul>
+                                    <li>Patent #, Title, Assignee, Date, Claims, Similarity (1-10), How you differ</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 3: Document Your Invention (Week 44-46)</h3>
+                    
+                    <h4>Invention Disclosure Document (IDD) Contents:</h4>
+                    <ol>
+                        <li><strong>Title</strong> (concise, descriptive)
+                            <ul><li>Example: "Processing-in-Memory Architecture with Reconfigurable Compute Units"</li></ul>
+                        </li>
+                        <li><strong>Inventors</strong> (all contributors)
+                            <ul><li>List in order of contribution</li><li>Include contact info and dates of contribution</li></ul>
+                        </li>
+                        <li><strong>Background</strong> (2-3 pages)
+                            <ul><li>Current state of technology</li><li>Limitations and problems</li><li>Why existing solutions inadequate</li></ul>
+                        </li>
+                        <li><strong>Summary of Invention</strong> (1 page)
+                            <ul><li>High-level overview</li><li>Key innovations in 3-5 bullet points</li><li>Advantages over prior art</li></ul>
+                        </li>
+                        <li><strong>Detailed Description</strong> (10-20 pages)
+                            <ul><li>Complete technical specification</li><li>Block diagrams with labels</li><li>Operation description step-by-step</li><li>Alternative embodiments</li></ul>
+                        </li>
+                        <li><strong>Drawings/Diagrams</strong> (5-15 figures)
+                            <ul><li>Block diagrams</li><li>Flowcharts</li><li>Timing diagrams</li><li>Comparison charts</li></ul>
+                        </li>
+                        <li><strong>Experimental Results</strong> (if available)
+                            <ul><li>Simulation data</li><li>Performance comparisons</li><li>Tables and graphs</li></ul>
+                        </li>
+                        <li><strong>Prior Art Review</strong>
+                            <ul><li>List of related patents/papers</li><li>How your invention differs</li></ul>
+                        </li>
+                    </ol>
+                    
+                    <div class="pro-tip">
+                        <strong>💡 DOCUMENTATION TIP:</strong> Keep lab notebooks with dated entries throughout development. This proves "reduction to practice" and can be critical if someone challenges your patent date.
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 4: Draft Patent Claims (Week 46-48)</h3>
+                    
+                    <div class="warning">
+                        <strong>⚠️ MOST IMPORTANT PART:</strong> Claims define legal boundaries of your patent. Everything else is just support. Get this right or hire attorney!
+                    </div>
+                    
+                    <h4>Claim Structure:</h4>
+                    <div class="code-example">
+INDEPENDENT CLAIM (Broad):
+────────────────────────────
+Claim 1: A processing system comprising:
+    a memory array having multiple rows and columns;
+    a plurality of compute units, each compute unit 
+        positioned adjacent to a respective column of 
+        the memory array;
+    wherein each compute unit comprises:
+        an arithmetic logic unit configured to perform
+        operations on data read from the adjacent column
+        without transferring the data to a separate 
+        processor core; and
+        a local register file for storing intermediate
+        computation results;
+    a controller configured to coordinate parallel 
+        operations across the plurality of compute units.
+
+DEPENDENT CLAIMS (Specific):
+────────────────────────────
+Claim 2: The processing system of claim 1, wherein 
+    the arithmetic logic unit comprises a multiply-
+    accumulate (MAC) unit optimized for matrix 
+    multiplication operations.
+
+Claim 3: The processing system of claim 1, wherein 
+    the memory array comprises resistive random-access
+    memory (ReRAM) cells.
+
+Claim 4: The processing system of claim 1, wherein 
+    the compute units are fabricated on a same 
+    substrate as the memory array using 3D stacking
+    technology.
+
+... (Claims 5-20 covering more specific aspects)
+                    </div>
+                    
+                    <h4>Claim Writing Strategy:</h4>
+                    <div class="circuit-border">
+                        <strong>Claim 1 (Independent):</strong>
+                        <ul>
+                            <li>Broadest reasonable scope</li>
+                            <li>Just enough detail to be novel</li>
+                            <li>Don't include unnecessary limitations</li>
+                            <li>Use "comprising" (open-ended, allows additions)</li>
+                        </ul>
+                        
+                        <strong>Claims 2-10 (Dependent on Claim 1):</strong>
+                        <ul>
+                            <li>Add specific implementation details</li>
+                            <li>Cover different embodiments</li>
+                            <li>Provide fallback positions if Claim 1 rejected</li>
+                        </ul>
+                        
+                        <strong>Claims 11-20 (More specific):</strong>
+                        <ul>
+                            <li>Very specific implementations</li>
+                            <li>Combinations of features</li>
+                            <li>Method claims (process/algorithm)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="trick-box">
+                        <strong>🎯 CLAIM WRITING TRICKS:</strong>
+                        <ul>
+                            <li>Use "a" or "an" (not "the") for first mention</li>
+                            <li>Use "the" for subsequent mentions</li>
+                            <li>Be specific about structure, not function alone</li>
+                            <li>Avoid absolute terms like "always", "never"</li>
+                            <li>Use "configured to" not "can" or "may"</li>
+                            <li>Include apparatus claims AND method claims</li>
+                            <li>Cover different angles: structure, method, system</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 5: File Provisional Patent (Week 48-49)</h3>
+                    
+                    <div class="highlight">
+                        <strong>Provisional Patent Benefits:</strong>
+                        <ul>
+                            <li>✅ Establishes priority date</li>
+                            <li>✅ Low cost ($150-$300)</li>
+                            <li>✅ Can label invention "Patent Pending"</li>
+                            <li>✅ 12 months to file full patent</li>
+                            <li>✅ Less formal requirements</li>
+                            <li>❌ Not examined, not published</li>
+                            <li>❌ Expires after 12 months if not converted</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>Filing Process:</h4>
+                    <ol>
+                        <li>Create USPTO account at uspto.gov</li>
+                        <li>Go to "Patent" → "File a Patent Application"</li>
+                        <li>Select "EFS-Web" (electronic filing)</li>
+                        <li>Choose "Provisional Application"</li>
+                        <li>Fill out Application Data Sheet (ADS)</li>
+                        <li>Upload specification PDF (your IDD)</li>
+                        <li>Upload drawings PDF</li>
+                        <li>Pay fee ($150 micro, $300 small, $600 large)</li>
+                        <li>Receive filing receipt with application number</li>
+                    </ol>
+                    
+                    <div class="code-example">
+FEE STRUCTURE (2024):
+──────────────────────────────────
+Entity Type     | Provisional | Non-Provisional
+────────────────|─────────────|─────────────────
+Micro Entity   | $150        | $2,000+
+Small Entity   | $300        | $4,000+
+Large Entity   | $600        | $8,000+
+
+MICRO ENTITY QUALIFICATIONS:
+- Individual inventor OR
+- Small business (<500 employees) AND
+- <4 previous patent applications AND
+- <$200K gross income
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 6: File Non-Provisional Patent (Month 12)</h3>
+                    
+                    <div class="warning">
+                        <strong>⚠️ DEADLINE:</strong> Must file within 12 months of provisional or lose priority date!
+                    </div>
+                    
+                    <h4>Non-Provisional Requirements:</h4>
+                    <ul>
+                        <li><strong>Specification:</strong> Must enable someone skilled in art to make/use invention</li>
+                        <li><strong>Claims:</strong> Properly formatted, clear boundaries</li>
+                        <li><strong>Abstract:</strong> 150 words max, technical summary</li>
+                        <li><strong>Drawings:</strong> Formal patent drawings (or file within 2 months)</li>
+                        <li><strong>Oath/Declaration:</strong> Inventor statement</li>
+                        <li><strong>Fees:</strong> $2K-$8K depending on entity size and number of claims</li>
+                    </ul>
+                    
+                    <h4>Should You Hire Attorney?</h4>
+                    <div class="circuit-border">
+                        <strong>DIY if:</strong>
+                        <ul>
+                            <li>✅ Simple, straightforward invention</li>
+                            <li>✅ Limited budget (<$5K)</li>
+                            <li>✅ Willing to spend 100+ hours learning</li>
+                            <li>✅ Not planning to commercialize aggressively</li>
+                        </ul>
+                        
+                        <strong>Hire Attorney if:</strong>
+                        <ul>
+                            <li>✅ Complex technology</li>
+                            <li>✅ High commercial value (>$1M potential)</li>
+                            <li>✅ Planning to license or enforce</li>
+                            <li>✅ International filing needed</li>
+                            <li>✅ Want strongest possible protection</li>
+                        </ul>
+                        
+                        <strong>Cost: $5K-$15K for full utility patent with attorney</strong>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 7: Office Actions & Amendments (Months 12-36)</h3>
+                    
+                    <h4>Examination Process:</h4>
+                    <ol>
+                        <li><strong>Initial Review (Months 12-18):</strong> Examiner checks formalities</li>
+                        <li><strong>First Office Action (Months 18-24):</strong> Examiner cites prior art, rejects claims</li>
+                        <li><strong>Response (Months 24-30):</strong> You amend claims, argue for patentability</li>
+                        <li><strong>Final Office Action (Months 30-36):</strong> Examiner makes final decision</li>
+                        <li><strong>Allowance or Appeal:</strong> Patent granted or you appeal</li>
+                    </ol>
+                    
+                    <div class="patent-tip">
+                        <strong>📊 STATISTICS:</strong>
+                        <ul>
+                            <li>~52% of utility patents eventually granted</li>
+                            <li>Average time to grant: 24-36 months</li>
+                            <li>Most claims rejected on first office action</li>
+                            <li>Amendments and arguments usually successful</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>Responding to Rejections:</h4>
+                    <div class="trick-box">
+                        <strong>🎯 RESPONSE STRATEGIES:</strong>
+                        <ul>
+                            <li><strong>Amend claims:</strong> Narrow scope to avoid prior art</li>
+                            <li><strong>Argue differences:</strong> Show why cited art doesn't apply</li>
+                            <li><strong>Add technical details:</strong> Make invention more specific</li>
+                            <li><strong>Provide evidence:</strong> Test results, expert declarations</li>
+                            <li><strong>Interview examiner:</strong> Discuss by phone to understand concerns</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 8: International Filing (Optional, Month 12)</h3>
+                    
+                    <h4>PCT (Patent Cooperation Treaty) Application:</h4>
+                    <ul>
+                        <li><strong>Cost:</strong> $5K-$15K for initial PCT</li>
+                        <li><strong>Benefit:</strong> Keeps international rights open for 30 months</li>
+                        <li><strong>Coverage:</strong> 150+ countries</li>
+                        <li><strong>Note:</strong> Must enter national phase in each country (~$5K-$10K each)</li>
+                    </ul>
+                    
+                    <h4>Key Markets for Chip Patents:</h4>
+                    <table>
+                        <tr>
+                            <th>Country</th>
+                            <th>Why Important</th>
+                            <th>Cost (est.)</th>
+                        </tr>
+                        <tr>
+                            <td>USA</td>
+                            <td>Largest market, strong enforcement</td>
+                            <td>$10K-$20K</td>
+                        </tr>
+                        <tr>
+                            <td>China</td>
+                            <td>Manufacturing hub, growing market</td>
+                            <td>$5K-$10K</td>
+                        </tr>
+                        <tr>
+                            <td>Taiwan</td>
+                            <td>TSMC and foundries</td>
+                            <td>$5K-$8K</td>
+                        </tr>
+                        <tr>
+                            <td>South Korea</td>
+                            <td>Samsung, SK Hynix</td>
+                            <td>$5K-$8K</td>
+                        </tr>
+                        <tr>
+                            <td>Europe (EPO)</td>
+                            <td>Large market</td>
+                            <td>$15K-$25K</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="pro-tip">
+                        <strong>💡 INTERNATIONAL TIP:</strong> File PCT to keep options open, then selectively enter countries based on commercialization success. You don't have to file everywhere!
+                    </div>
+                </div>
+                
+                <h3>Common Patent Mistakes to Avoid:</h3>
+                <div class="warning">
+                    <ul>
+                        <li>❌ Public disclosure before filing (conferences, papers, social media)</li>
+                        <li>❌ Inadequate prior art search (missing similar patent)</li>
+                        <li>❌ Claims too broad (will be rejected)</li>
+                        <li>❌ Claims too narrow (easy to design around)</li>
+                        <li>❌ Missing provisional deadline (lose priority)</li>
+                        <li>❌ Poor documentation (can't prove invention date)</li>
+                        <li>❌ Not considering freedom to operate (your patent may infringe others!)</li>
+                        <li>❌ Ignoring maintenance fees (patent lapses)</li>
+                    </ul>
+                </div>
+                
+                <ul class="checklist">
+                    <li>Identified all patentable innovations</li>
+                    <li>Completed exhaustive prior art search (50+ hours)</li>
+                    <li>Drafted comprehensive invention disclosure</li>
+                    <li>Written strong patent claims (independent + dependent)</li>
+                    <li>Filed provisional patent application</li>
+                    <li>Decided on attorney vs DIY for non-provisional</li>
+                    <li>Prepared for office actions</li>
+                    <li>Considered international filing strategy</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- PHASE 6: RESOURCES -->
+        <div class="phase" id="phase6">
+            <div class="section">
+                <h2>📚 Phase 6: Resources & Advanced Topics</h2>
+                
+                <div class="step-box">
+                    <h3>📋 Essential Books & Publications</h3>
+                    
+                    <h4>Computer Architecture:</h4>
+                    <ul>
+                        <li><strong>"Computer Architecture: A Quantitative Approach"</strong> - Hennessy & Patterson (Bible of architecture)</li>
+                        <li><strong>"Modern Processor Design"</strong> - Shen & Lipasti (Detailed microarchitecture)</li>
+                        <li><strong>"Chip Multiprocessor Architecture"</strong> - Kunle Olukotun (Multi-core)</li>
+                        <li><strong>"Computer Organization and Design"</strong> - Patterson & Hennessy (RISC-V edition)</li>
+                    </ul>
+                    
+                    <h4>VLSI Design:</h4>
+                    <ul>
+                        <li><strong>"CMOS VLSI Design"</strong> - Weste & Harris (Circuit-level design)</li>
+                        <li><strong>"Digital Integrated Circuits"</strong> - Rabaey (Comprehensive)</li>
+                        <li><strong>"VLSI Physical Design"</strong> - Kahng (Backend design)</li>
+                    </ul>
+                    
+                    <h4>HDL & Verification:</h4>
+                    <ul>
+                        <li><strong>"Verilog HDL"</strong> - Palnitkar (Verilog reference)</li>
+                        <li><strong>"SystemVerilog for Verification"</strong> - Spear (Advanced verification)</li>
+                        <li><strong>"Writing Testbenches"</strong> - Bergeron (Verification methodology)</li>
+                    </ul>
+                    
+                    <h4>Patents & IP:</h4>
+                    <ul>
+                        <li><strong>"Patent It Yourself"</strong> - Pressman (DIY patents)</li>
+                        <li><strong>"Patent Searching Made Easy"</strong> - Hitchcock (Prior art search)</li>
+                        <li><strong>"Patent Strategies for Software"</strong> - Classen (Tech patents)</li>
+                    </ul>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 Online Courses & MOOCs</h3>
+                    
+                    <table>
+                        <tr>
+                            <th>Course</th>
+                            <th>Platform</th>
+                            <th>Level</th>
+                        </tr>
+                        <tr>
+                            <td>Computer Architecture</td>
+                            <td>Princeton (Coursera)</td>
+                            <td>Advanced</td>
+                        </tr>
+                        <tr>
+                            <td>6.004 Computation Structures</td>
+                            <td>MIT OCW</td>
+                            <td>Intermediate</td>
+                        </tr>
+                        <tr>
+                            <td>VLSI Design</td>
+                            <td>IIT Bombay (NPTEL)</td>
+                            <td>Advanced</td>
+                        </tr>
+                        <tr>
+                            <td>Digital Design</td>
+                            <td>UC San Diego (Coursera)</td>
+                            <td>Beginner</td>
+                        </tr>
+                        <tr>
+                            <td>FPGA Design</td>
+                            <td>Udemy Various</td>
+                            <td>All levels</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="pro-tip">
+                        <strong>💡 LEARNING TIP:</strong> Do projects while learning. Theory alone won't stick. Build a simple RISC-V core or accelerator as you go through courses.
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 Tools & Software</h3>
+                    
+                    <h4>Open Source Tools (FREE):</h4>
+                    <div class="circuit-border">
+                        <strong>Simulation:</strong>
+                        <ul>
+                            <li><strong>Icarus Verilog:</strong> Verilog simulator</li>
+                            <li><strong>Verilator:</strong> Fast C++ based simulator</li>
+                            <li><strong>GHDL:</strong> VHDL simulator</li>
+                            <li><strong>GTKWave:</strong> Waveform viewer</li>
+                        </ul>
+                        
+                        <strong>Synthesis & Implementation:</strong>
+                        <ul>
+                            <li><strong>Yosys:</strong> Synthesis framework</li>
+                            <li><strong>ABC:</strong> Logic optimization</li>
+                            <li><strong>OpenROAD:</strong> Complete RTL-to-GDSII flow</li>
+                            <li><strong>Magic:</strong> VLSI layout tool</li>
+                        </ul>
+                        
+                        <strong>Process Design Kits:</strong>
+                        <ul>
+                            <li><strong>SkyWater 130nm PDK:</strong> Open-source PDK from Google</li>
+                            <li><strong>FreePDK45:</strong> 45nm educational PDK</li>
+                        </ul>
+                        
+                        <strong>Architecture Simulation:</strong>
+                        <ul>
+                            <li><strong>gem5:</strong> Full-system simulator</li>
+                            <li><strong>Sniper:</strong> Interval-based simulator</li>
+                            <li><strong>QEMU:</strong> Emulator for ISA development</li>
+                            <li><strong>Spike:</strong> RISC-V ISA simulator</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>Commercial Tools (Academic Licenses Often FREE):</h4>
+                    <div class="code-example">
+XILINX:
+- Vivado Design Suite (FPGA)
+- Vitis HLS (High-Level Synthesis)
+
+INTEL:
+- Quartus Prime (FPGA)
+- oneAPI (Heterogeneous computing)
+
+CADENCE:
+- Virtuoso (analog design)
+- Genus/Innovus (digital implementation)
+- Xcelium (simulation)
+
+SYNOPSYS:
+- Design Compiler (synthesis)
+- VCS (simulation)
+- PrimeTime (timing analysis)
+- IC Compiler (place & route)
+
+MENTOR/SIEMENS:
+- ModelSim (simulation)
+- Calibre (DRC/LVS)
+- Questa (verification)
+
+Apply for academic licenses through university!
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 Communities & Forums</h3>
+                    
+                    <h4>Online Communities:</h4>
+                    <ul>
+                        <li><strong>Reddit:</strong> r/FPGA, r/chipdesign, r/ECE, r/vlsi</li>
+                        <li><strong>Stack Overflow:</strong> FPGA, VHDL, Verilog tags</li>
+                        <li><strong>EDABoard:</strong> VLSI design forum</li>
+                        <li><strong>Discord:</strong> FPGA, OpenROAD, Verilog communities</li>
+                        <li><strong>GitHub:</strong> Follow open-source chip projects</li>
+                    </ul>
+                    
+                    <h4>Professional Organizations:</h4>
+                    <ul>
+                        <li><strong>IEEE:</strong> Industry standard, conferences, papers</li>
+                        <li><strong>ACM SIGARCH:</strong> Computer architecture special interest group</li>
+                        <li><strong>RISC-V International:</strong> Open ISA foundation</li>
+                        <li><strong>Open Compute Project:</strong> Hardware innovation</li>
+                    </ul>
+                    
+                    <div class="pro-tip">
+                        <strong>💡 NETWORKING TIP:</strong> Attend virtual conferences (many are free). ISCA, MICRO, Hot Chips often have free student registration. Great for learning latest trends and networking!
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 Conferences & Publications to Follow</h3>
+                    
+                    <table>
+                        <tr>
+                            <th>Conference</th>
+                            <th>Focus</th>
+                            <th>Tier</th>
+                        </tr>
+                        <tr>
+                            <td>ISCA</td>
+                            <td>Computer Architecture</td>
+                            <td>Top</td>
+                        </tr>
+                        <tr>
+                            <td>MICRO</td>
+                            <td>Microarchitecture</td>
+                            <td>Top</td>
+                        </tr>
+                        <tr>
+                            <td>ASPLOS</td>
+                            <td>Architecture+Systems</td>
+                            <td>Top</td>
+                        </tr>
+                        <tr>
+                            <td>HPCA</td>
+                            <td>High-Performance</td>
+                            <td>Top</td>
+                        </tr>
+                        <tr>
+                            <td>ISSCC</td>
+                            <td>Solid-State Circuits</td>
+                            <td>Top</td>
+                        </tr>
+                        <tr>
+                            <td>DAC</td>
+                            <td>Design Automation</td>
+                            <td>Top</td>
+                        </tr>
+                        <tr>
+                            <td>Hot Chips</td>
+                            <td>Industry Symposium</td>
+                            <td>Industry</td>
+                        </tr>
+                    </table>
+                    
+                    <h4>Journals:</h4>
+                    <ul>
+                        <li><strong>IEEE Micro:</strong> Microprocessor trends</li>
+                        <li><strong>IEEE TCAD:</strong> Computer-Aided Design</li>
+                        <li><strong>ACM TACO:</strong> Architecture and Code Optimization</li>
+                        <li><strong>IEEE JSSC:</strong> Solid-State Circuits</li>
+                    </ul>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 Funding Sources</h3>
+                    
+                    <h4>Government Grants:</h4>
+                    <div class="circuit-border">
+                        <strong>United States:</strong>
+                        <ul>
+                            <li><strong>DARPA:</strong> Electronics Resurgence Initiative (ERI)
+                                <ul><li>$1.5B for chip innovation</li><li>Programs: CRAFT, POSH, 3DSoC</li></ul>
+                            </li>
+                            <li><strong>NSF SBIR/STTR:</strong> Small Business Innovation Research
+                                <ul><li>Phase I: $275K</li><li>Phase II: $1M</li></ul>
+                            </li>
+                            <li><strong>CHIPS Act:</strong> $52B for US semiconductor
+                                <ul><li>Manufacturing, R&D funding</li><li>Apply through NIST</li></ul>
+                            </li>
+                            <li><strong>DOE ARPA-E:</strong> Energy-efficient computing
+                                <ul><li>Focus on low-power designs</li></ul>
+                            </li>
+                        </ul>
+                        
+                        <strong>Europe:</strong>
+                        <ul>
+                            <li><strong>Horizon Europe:</strong> €95B research funding</li>
+                            <li><strong>EuroHPC:</strong> High-performance computing</li>
+                        </ul>
+                        
+                        <strong>Asia:</strong>
+                        <ul>
+                            <li><strong>China:</strong> National IC Industry Investment Fund</li>
+                            <li><strong>Taiwan:</strong> MOEA technology grants</li>
+                            <li><strong>South Korea:</strong> K-semiconductor strategy</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>Private Funding:</h4>
+                    <ul>
+                        <li><strong>Venture Capital:</strong> a16z, Sequoia (hardware funds)</li>
+                        <li><strong>Corporate VCs:</strong> Intel Capital, Samsung Catalyst</li>
+                        <li><strong>Accelerators:</strong> HAX, Y Combinator (hardware track)</li>
+                        <li><strong>Angel Investors:</strong> AngelList hardware syndicates</li>
+                    </ul>
+                    
+                    <h4>Free Fabrication:</h4>
+                    <div class="highlight">
+                        <strong>eFabless / Google Open MPW:</strong>
+                        <ul>
+                            <li>FREE chip fabrication via SkyWater 130nm</li>
+                            <li>Submit open-source design</li>
+                            <li>~40 mm² die area</li>
+                            <li>Runs every ~6 months</li>
+                            <li>chipIgnite.com</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 Advanced Topics Deep Dive</h3>
+                    
+                    <h4>AI/ML Accelerator Design:</h4>
+                    <div class="trick-box">
+                        <strong>Key Techniques:</strong>
+                        <ul>
+                            <li><strong>Systolic Arrays:</strong> TPU-style matrix multiplication</li>
+                            <li><strong>Dataflow Architectures:</strong> Spatial arrays, reconfigurable</li>
+                            <li><strong>Sparsity Exploitation:</strong> Skip zero computations</li>
+                            <li><strong>Quantization:</strong> INT8/INT4 instead of FP32</li>
+                            <li><strong>Compression:</strong> Weight/activation compression</li>
+                            <li><strong>Near-Memory Compute:</strong> Reduce data movement</li>
+                        </ul>
+                        
+                        <strong>Resources:</strong>
+                        <ul>
+                            <li>Stanford CS217: Hardware Accelerators for ML</li>
+                            <li>MIT 6.5930: Hardware Architecture for Deep Learning</li>
+                            <li>Google TPU papers (ISCA 2017, 2021)</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>Neuromorphic Computing:</h4>
+                    <div class="circuit-border">
+                        <strong>Concepts:</strong>
+                        <ul>
+                            <li>Spiking Neural Networks (SNN)</li>
+                            <li>Event-driven computation</li>
+                            <li>Memristor-based synapses</li>
+                            <li>Ultra-low power (µW-mW range)</li>
+                        </ul>
+                        
+                        <strong>Leading Projects:</strong>
+                        <ul>
+                            <li>Intel Loihi (research chip)</li>
+                            <li>IBM TrueNorth</li>
+                            <li>BrainChip Akida</li>
+                            <li>SpiNNaker (University of Manchester)</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>Quantum Computing Interfaces:</h4>
+                    <ul>
+                        <li><strong>Qubit Control:</strong> Classical-quantum interface circuits</li>
+                        <li><strong>Cryogenic Electronics:</strong> 4K operation for proximity</li>
+                        <li><strong>RF/Microwave:</strong> Qubit manipulation signals</li>
+                        <li><strong>Error Correction:</strong> Classical decoding of quantum codes</li>
+                    </ul>
+                    
+                    <h4>Photonic Interconnects:</h4>
+                    <div class="code-example">
+PHOTONIC INTEGRATION OPPORTUNITIES:
+───────────────────────────────────
+• Silicon Photonics: CMOS-compatible
+• Wavelength Division Multiplexing (WDM)
+• Ring resonators for routing
+• Photodetectors (Ge-on-Si)
+• Modulators (MZI, ring)
+• 100x bandwidth vs electrical
+• Lower power for long-distance
+
+Challenges:
+- Thermal sensitivity
+- Yield and testing
+- Cost (exotic materials)
+- Lack of photonic memory
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 Industry Trends to Watch (2024-2030)</h3>
+                    
+                    <div class="highlight">
+                        <strong>🔥 HOT AREAS:</strong>
+                        <ol>
+                            <li><strong>Chiplet & Advanced Packaging</strong>
+                                <ul><li>2.5D, 3D stacking</li><li>UCIe standard for chiplet interconnect</li><li>Heterogeneous integration</li></ul>
+                            </li>
+                            <li><strong>RISC-V Adoption</strong>
+                                <ul><li>Open ISA gaining momentum</li><li>Custom extensions for domains</li><li>Reduced licensing costs</li></ul>
+                            </li>
+                            <li><strong>Processing-in-Memory (PIM)</strong>
+                                <ul><li>Overcome memory wall</li><li>DRAM with logic</li><li>Samsung/SK Hynix investing heavily</li></ul>
+                            </li>
+                            <li><strong>AI-Specific Chips</strong>
+                                <ul><li>Edge AI (IoT, automotive)</li><li>Transformer acceleration</li><li>Generative AI workloads</li></ul>
+                            </li>
+                            <li><strong>Carbon Nanotubes & 2D Materials</strong>
+                                <ul><li>Post-silicon transistors</li><li>Graphene, MoS₂ research</li><li>10+ years from production</li></ul>
+                            </li>
+                            <li><strong>Cryogenic Computing</strong>
+                                <ul><li>77K operation (liquid nitrogen)</li><li>Lower resistance, faster switching</li><li>For data centers, quantum interfaces</li></ul>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 Career Paths</h3>
+                    
+                    <table>
+                        <tr>
+                            <th>Role</th>
+                            <th>Focus</th>
+                            <th>Avg Salary (US)</th>
+                        </tr>
+                        <tr>
+                            <td>CPU Architect</td>
+                            <td>Pipeline, ISA design</td>
+                            <td>$150K-$300K</td>
+                        </tr>
+                        <tr>
+                            <td>ASIC Design Engineer</td>
+                            <td>RTL coding, integration</td>
+                            <td>$120K-$250K</td>
+                        </tr>
+                        <tr>
+                            <td>Physical Design Engineer</td>
+                            <td>Place & route, timing</td>
+                            <td>$110K-$220K</td>
+                        </tr>
+                        <tr>
+                            <td>Verification Engineer</td>
+                            <td>Testbenches, coverage</td>
+                            <td>$110K-$230K</td>
+                        </tr>
+                        <tr>
+                            <td>Design for Test (DFT)</td>
+                            <td>Test structures, BIST</td>
+                            <td>$100K-$200K</td>
+                        </tr>
+                        <tr>
+                            <td>ML Accelerator Architect</td>
+                            <td>AI hardware design</td>
+                            <td>$160K-$350K</td>
+                        </tr>
+                        <tr>
+                            <td>Patent Attorney (Tech)</td>
+                            <td>IP law + EE background</td>
+                            <td>$150K-$400K</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="pro-tip">
+                        <strong>💡 CAREER TIP:</strong> Specialize in ONE area deeply, but have T-shaped knowledge. E.g., expert in memory systems, but understand CPUs, interconnects, verification.
+                    </div>
+                    
+                    <h4>Top Companies Hiring:</h4>
+                    <ul>
+                        <li><strong>Big Tech:</strong> Apple, Google, Meta, Microsoft, Amazon (custom silicon)</li>
+                        <li><strong>Chip Giants:</strong> Intel, AMD, NVIDIA, Qualcomm, Broadcom</li>
+                        <li><strong>Mobile:</strong> ARM, MediaTek, Samsung</li>
+                        <li><strong>Startups:</strong> Tenstorrent, Cerebras, Graphcore, SambaNova</li>
+                        <li><strong>AI Chips:</strong> Google (TPU), Tesla (Dojo), Amazon (Trainium)</li>
+                    </ul>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 Launch Checklist: Ready to Revolutionize!</h3>
+                    
+                    <div class="circuit-border">
+                        <ul class="checklist">
+                            <li>Completed comprehensive architecture design (50+ pages)</li>
+                            <li>Implemented full RTL with >90% coverage</li>
+                            <li>Validated design via FPGA prototype</li>
+                            <li>Filed provisional patent (minimum)</li>
+                            <li>Created business plan or research paper</li>
+                            <li>Built network in chip design community</li>
+                            <li>Identified funding sources</li>
+                            <li>Assembled core team (if commercializing)</li>
+                            <li>Created roadmap for next 2-3 years</li>
+                            <li>Set up legal entity (if startup)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="chip-diagram">
+╔═══════════════════════════════════════════════════╗
+║                                                   ║
+║         🚀 YOUR CHIP INNOVATION JOURNEY 🚀        ║
+║                                                   ║
+║   PHASE 1: Ideation (6 weeks)                    ║
+║       ↓                                           ║
+║   PHASE 2: Architecture Design (8 weeks)         ║
+║       ↓                                           ║
+║   PHASE 3: RTL Coding (12 weeks)                 ║
+║       ↓                                           ║
+║   PHASE 4: Validation & FPGA (14 weeks)          ║
+║       ↓                                           ║
+║   PHASE 5: Patent Filing (8 weeks)               ║
+║       ↓                                           ║
+║   PHASE 6: Commercialize or Publish              ║
+║                                                   ║
+║   TOTAL: ~48 weeks (1 year)                      ║
+║                                                   ║
+║   FROM IDEA TO WORKING PROTOTYPE + PATENT!       ║
+║                                                   ║
+╚═══════════════════════════════════════════════════╝
+                </div>
+                
+                <div class="highlight" style="text-align: center; margin-top: 20px; padding: 15px;">
+                    <strong style="font-size: 1.1em;">🎯 YOU NOW HAVE THE COMPLETE ROADMAP!</strong><br><br>
+                    <span style="font-size: 0.9em;">
+                    From problem identification to patent filing,<br>
+                    from RTL coding to FPGA validation,<br>
+                    you have everything needed to create breakthrough chip architectures.<br><br>
+                    The semiconductor industry needs YOUR innovation.<br>
+                    <strong>START TODAY. BUILD THE FUTURE.</strong> ⚡
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <script>
+        function showPhase(phaseNum) {
+            // Hide all phases
+            const phases = document.querySelectorAll('.phase');
+            phases.forEach(phase => phase.classList.remove('active'));
+            
+            // Show selected phase
+            document.getElementById('phase' + phaseNum).classList.add('active');
+            
+            // Update progress bar
+            const progress = phaseNum * 16.67; // 100/6 phases
+            document.getElementById('progress').style.width = progress + '%';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
+                        <strong>💡 PRO TIP:</strong> Focus on problems that cause 10x pain. Small improvements won't get patents approved. Look for bottlenecks that cost billions in energy, time, or silicon area.
+                    </div>
+                    
+                    <h4>Where to Find Problems:</h4>
+                    <ul>
+                        <li><strong>Power walls:</strong> Data centers consuming 2% of global energy</li>
+                        <li><strong>Memory bottleneck:</strong> 100x speed gap between CPU and DRAM</li>
+                        <li><strong>Specialization:</strong> Need for domain-specific accelerators</li>
+                        <li><strong>Security:</strong> Side-channel attacks, speculative execution</li>
+                        <li><strong>Scalability:</strong> Amdahl's law limiting parallelism</li>
+                        <li><strong>Manufacturing:</strong> End of Moore's Law at 2nm</li>
+                    </ul>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 2: Market & Technology Research (Week 2-3)</h3>
+                    
+                    <div class="trick-box">
+                        <strong>🎯 RESEARCH TRICK:</strong> Use Google Scholar alerts for keywords like "chip architecture", "accelerator", "neuromorphic". Set up 10+ alerts to stay current.
+                    </div>
+                    
+                    <h4>Key Questions to Answer:</h4>
+                    <ol>
+                        <li>What are the top 5 emerging applications? (AI, quantum, edge, IoT, automotive)</li>
+                        <li>What compute patterns do they have? (matrix multiply, convolution, graph traversal)</li>
+                        <li>What are current solutions inadequate at?</li>
+                        <li>What's the total addressable market? (TAM calculation)</li>
+                        <li>Who are the competitors? What are their weaknesses?</li>
+                    </ol>
+                    
+                    <table>
+                        <tr>
+                            <th>Application</th>
+                            <th>Key Bottleneck</th>
+                            <th>Opportunity</th>
+                        </tr>
+                        <tr>
+                            <td>AI Training</td>
+                            <td>Memory bandwidth</td>
+                            <td>HBM alternatives, in-memory compute</td>
+                        </tr>
+                        <tr>
+                            <td>Edge AI</td>
+                            <td>Power budget</td>
+                            <td>Ultra-low power designs, sparsity</td>
+                        </tr>
+                        <tr>
+                            <td>5G/6G</td>
+                            <td>Latency</td>
+                            <td>Hardware acceleration, DSPs</td>
+                        </tr>
+                        <tr>
+                            <td>Cryptography</td>
+                            <td>Quantum threats</td>
+                            <td>Post-quantum crypto engines</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 3: Brainstorm Architectural Innovations (Week 3-4)</h3>
+                    
+                    <div class="circuit-border">
+                        <h4>Innovation Framework - Pick Your Category:</h4>
+                        
+                        <strong>A. COMPUTE PARADIGM:</strong>
+                        <ul>
+                            <li>Neuromorphic (spiking neurons, event-driven)</li>
+                            <li>Optical computing (photonic interconnects)</li>
+                            <li>Quantum co-processors (hybrid classical-quantum)</li>
+                            <li>Analog in-memory compute (ReRAM, PCM)</li>
+                            <li>Reversible computing (energy recovery)</li>
+                            <li>Stochastic computing (probabilistic bits)</li>
+                        </ul>
+                        
+                        <strong>B. MEMORY INNOVATION:</strong>
+                        <ul>
+                            <li>Processing-in-Memory (PIM) with custom logic</li>
+                            <li>3D stacking with TSVs (Through-Silicon Vias)</li>
+                            <li>Near-memory computing with smart DRAM</li>
+                            <li>Emerging NVM (MRAM, FeRAM, STT-RAM)</li>
+                            <li>Content-addressable memory for AI</li>
+                            <li>Hybrid SRAM-eDRAM caches</li>
+                        </ul>
+                        
+                        <strong>C. INTERCONNECT BREAKTHROUGHS:</strong>
+                        <ul>
+                            <li>Silicon photonics for chip-to-chip</li>
+                            <li>Wireless on-chip network (RF, THz)</li>
+                            <li>Hybrid electrical-optical NoC</li>
+                            <li>Advanced packaging (2.5D, chiplets)</li>
+                            <li>Carbon nanotube interconnects</li>
+                        </ul>
+                        
+                        <strong>D. SPECIALIZED UNITS:</strong>
+                        <ul>
+                            <li>Tensor cores optimized for specific operations</li>
+                            <li>Graph processing units for social networks</li>
+                            <li>DNA sequencing accelerators</li>
+                            <li>Blockchain mining ASICs</li>
+                            <li>Video encoding/decoding engines</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pro-tip">
+                        <strong>💡 IDEATION TRICK:</strong> Use SCAMPER method:<br>
+                        <strong>S</strong>ubstitute - Replace SRAM with eDRAM<br>
+                        <strong>C</strong>ombine - Merge CPU + NPU cores<br>
+                        <strong>A</strong>dapt - Apply neuroscience to circuits<br>
+                        <strong>M</strong>odify - Change pipeline depth<br>
+                        <strong>P</strong>ut to other use - Repurpose GPU for inference<br>
+                        <strong>E</strong>liminate - Remove instruction decoder<br>
+                        <strong>R</strong>everse - Start with memory, add compute
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 4: Prior Art Deep Dive (Week 4-6)</h3>
+                    
+                    <div class="warning">
+                        <strong>⚠️ CRITICAL:</strong> Spend 40+ hours on prior art search. Missing a similar patent can invalidate years of work!
+                    </div>
+                    
+                    <h4>Comprehensive Search Strategy:</h4>
+                    <ol>
+                        <li><strong>USPTO Search (patents.uspto.gov)</strong>
+                            <ul>
+                                <li>Use CPC codes: G06F (computing), H01L (semiconductors)</li>
+                                <li>Search keywords + variations (e.g., "processing in memory" OR "compute in memory")</li>
+                                <li>Go back 20 years minimum</li>
+                                <li>Export 50+ relevant patents to spreadsheet</li>
+                            </ul>
+                        </li>
+                        <li><strong>Google Patents</strong>
+                            <ul>
+                                <li>Better search interface, includes international patents</li>
+                                <li>Use "Similar" feature to find related patents</li>
+                                <li>Check citation graphs to find patent families</li>
+                            </ul>
+                        </li>
+                        <li><strong>IEEE Xplore</strong>
+                            <ul>
+                                <li>Academic papers are prior art too!</li>
+                                <li>Search ISCA, MICRO, ISSCC proceedings</li>
+                                <li>Document any published designs similar to yours</li>
+                            </ul>
+                        </li>
+                        <li><strong>ArXiv.org</strong>
+                            <ul>
+                                <li>Preprints establish prior art dates</li>
+                                <li>Search cs.AR (architecture) category</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <div class="trick-box">
+                        <strong>🎯 SEARCH TRICKS:</strong>
+                        <ul>
+                            <li>Use wildcards: "proces* memor*" finds variants</li>
+                            <li>Search assignees: companies like Intel, NVIDIA, IBM</li>
+                            <li>Look for expired patents - you can build on them!</li>
+                            <li>Check continuations and divisionals</li>
+                            <li>Read claims carefully - that's what matters legally</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>Document Everything:</h4>
+                    <div class="code-example">
+CREATE SPREADSHEET WITH COLUMNS:
+- Patent Number
+- Title
+- Assignee
+- Filing Date
+- Key Claims
+- Similarity Score (1-10)
+- How Your Design Differs
+- Notes
+
+Example entry:
+US10234567 | Processing-in-Memory | Samsung | 2019
+Claims: DRAM with embedded ALU
+Similarity: 7/10
+Difference: Our design uses ReRAM + custom MAC unit
+                    </div>
+                </div>
+                
+                <div class="chip-diagram">
+┌─────────────────────────────────────────┐
+│   INNOVATION VALIDATION FLOWCHART       │
+├─────────────────────────────────────────┤
+│                                         │
+│  Is problem significant? ──NO──► STOP  │
+│         │                               │
+│        YES                              │
+│         │                               │
+│         ▼                               │
+│  Novel solution? ──NO──► Iterate       │
+│         │                     │         │
+│        YES                    │         │
+│         │◄────────────────────┘         │
+│         ▼                               │
+│  Prior art exists? ──YES──► Can you    │
+│         │                    improve    │
+│         NO                   10x?       │
+│         │                     │         │
+│         │                    YES        │
+│         │                     │         │
+│         └────────┬────────────┘         │
+│                  ▼                      │
+│            PROCEED TO                   │
+│            DETAILED DESIGN              │
+└─────────────────────────────────────────┘
+                </div>
+                
+                <ul class="checklist">
+                    <li>Defined specific problem with quantified impact ($, W, ms)</li>
+                    <li>Researched 50+ existing solutions thoroughly</li>
+                    <li>Documented novel approach with technical details</li>
+                    <li>Identified 3+ key differentiators from prior art</li>
+                    <li>Created innovation document (10+ pages)</li>
+                    <li>Validated market need with potential users</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- PHASE 2: DESIGN -->
+        <div class="phase" id="phase2">
+            <div class="section">
+                <h2>⚙️ Phase 2: Architecture Design</h2>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 1: Define Architecture Requirements (Week 7-8)</h3>
+                    
+                    <h4>Create Requirements Specification Document:</h4>
+                    
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Requirements</th>
+                            <th>Target Spec</th>
+                        </tr>
+                        <tr>
+                            <td>Performance</td>
+                            <td>Throughput, Latency, IPC</td>
+                            <td>e.g., 100 TOPS, <1ms</td>
+                        </tr>
+                        <tr>
+                            <td>Power</td>
+                            <td>TDP, idle power, DVFS</td>
+                            <td>e.g., <15W, <100mW idle</td>
+                        </tr>
+                        <tr>
+                            <td>Area</td>
+                            <td>Die size, transistor count</td>
+                            <td>e.g., <100mm², <5B gates</td>
+                        </tr>
+                        <tr>
+                            <td>Memory</td>
+                            <td>Bandwidth, capacity, latency</td>
+                            <td>e.g., 1TB/s, 16GB, 10ns</td>
+                        </tr>
+                        <tr>
+                            <td>I/O</td>
+                            <td>Interfaces, protocols</td>
+                            <td>e.g., PCIe 5.0, CXL 2.0</td>
+                        </tr>
+                        <tr>
+                            <td>Process</td>
+                            <td>Technology node, packaging</td>
+                            <td>e.g., 5nm, 2.5D</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="pro-tip">
+                        <strong>💡 REQUIREMENTS TRICK:</strong> Use Pareto principle - identify the 20% of features that deliver 80% of value. Don't over-engineer!
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 2: High-Level Block Diagram (Week 8-9)</h3>
+                    
+                    <div class="chip-diagram">
+┌────────────────────────────────────────────────┐
+│         EXAMPLE: AI ACCELERATOR SoC            │
+├────────────────────────────────────────────────┤
+│                                                │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
+│  │ ARM CPU  │  │ ARM CPU  │  │ ARM CPU  │    │
+│  │ CORE 0   │  │ CORE 1   │  │ CORE 2   │    │
+│  │ 2.5GHz   │  │ 2.5GHz   │  │ 2.5GHz   │    │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘    │
+│       │             │             │           │
+│       └─────────────┼─────────────┘           │
+│                     │                         │
+│              ┌──────▼──────┐                  │
+│              │   L2 CACHE  │                  │
+│              │    4MB      │                  │
+│              └──────┬──────┘                  │
+│                     │                         │
+│       ┌─────────────┼─────────────┐           │
+│       │             │             │           │
+│  ┌────▼─────┐  ┌───▼────┐  ┌─────▼─────┐    │
+│  │ NPU      │  │ GPU    │  │ DSP       │    │
+│  │ TENSOR   │  │ SHADER │  │ VECTOR    │    │
+│  │ CORES x8 │  │ CORES  │  │ UNITS x4  │    │
+│  └────┬─────┘  └───┬────┘  └─────┬─────┘    │
+│       │            │              │           │
+│       └────────────┼──────────────┘           │
+│                    │                          │
+│            ┌───────▼────────┐                 │
+│            │  INTERCONNECT  │                 │
+│            │  (NOC MESH)    │                 │
+│            └───────┬────────┘                 │
+│                    │                          │
+│       ┌────────────┼────────────┐             │
+│       │            │            │             │
+│  ┌────▼────┐  ┌───▼───┐   ┌───▼────┐        │
+│  │ MEMORY  │  │ DMA   │   │ PCIe   │        │
+│  │ CTRL    │  │ ENGINE│   │ GEN 5  │        │
+│  │ (HBM3)  │  │       │   │ x16    │        │
+│  └─────────┘  └───────┘   └────────┘        │
+│                                               │
+└────────────────────────────────────────────────┘
+                    </div>
+                    
+                    <h4>Design Decisions Checklist:</h4>
+                    <ul>
+                        <li>☐ Number and type of processing cores</li>
+                        <li>☐ Memory hierarchy (L1/L2/L3/LLC sizes)</li>
+                        <li>☐ Cache coherency protocol (MESI, MOESI, custom)</li>
+                        <li>☐ Interconnect topology (mesh, ring, crossbar, custom)</li>
+                        <li>☐ Memory interface (LPDDR5, HBM3, GDDR6)</li>
+                        <li>☐ I/O standards (PCIe, USB, Ethernet, custom)</li>
+                        <li>☐ Power management (DVFS, power gating, clock gating)</li>
+                        <li>☐ Security features (TrustZone, encryption, secure boot)</li>
+                    </ul>
+                </div>
+                
+                <div class="step-box">
+                    <h3>📋 STEP 3: Detailed Microarchitecture (Week 9-12)</h3>
+                    
+                    <h4>A. Processing Core Design</h4>
+                    <div class="circuit-border">
+                        <strong>Pipeline Stages:</strong>
+                        <ol>
+                            <li><strong>Fetch (F):</strong> Instruction cache access, PC update
+                                <ul>
+                                    <li>I-cache size: 32KB-64KB typical</li>
+                                    <li>Fetch width: 4-8 instructions/cycle</li>
+                                    <li>Branch prediction: Tournament, neural, hybrid</li>
+                                </ul>
+                            </li>
+                            <li><strong>Decode (D):</strong> Instruction parsing, μop generation
+                                <ul>
+                                    <li>RISC: Simple, 1-2 stages</li>
+                                    <li>CISC: Complex, 3-4 stages with μop cache</li>
+                                    <li>Decode width: Match fetch width</li>
+                                </ul>
+                            </li>
+                            <li><strong>Rename (RN):</strong> Register renaming, RAW hazard elimination
+                                <ul>
+                                    <li>Physical register file: 128-256 registers</li>
+                                    <li>ROB size: 128-512 entries</li>
+                                    <li>Renaming algorithm: RAT (Register Alias Table)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Dispatch (DS):</strong> Issue to execution units
+                                <ul>
+                                    <li>Reservation stations: 20-60 entries</li>
+                                    <li>Out-of-order issue logic</li>
+                                    <li>Load/store queue: 32-128 entries</li>
+                                </ul>
+                            </li>
+                            <li><strong>Execute (EX):</strong> ALU, FPU, LSU operations
+                                <ul>
+                                    <li>Integer ALU: 4-6 units</li>
+                                    <li>FP/SIMD: 2-4 units</li>
+                                    <li>LSU: 2-3 load, 1-2 store units</li>
+                                    <li>Execution latencies: 1-20+ cycles</li>
+                                </ul>
+                            </li>
+                            <li><strong>Writeback (WB):</strong> Result commit, ROB update
+                                <ul>
+                                    <li>Writeback bandwidth: Match issue width</li>
+                                    <li>Exception handling</li>
+                                </ul>
+                            </li>
+                            <li><strong>Commit (C):</strong> Architectural state update
+                                <ul>
+                                    <li>Commit width: 4-8 instructions/cycle</li>
+                                    <li>Precise exceptions</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                    
+                    <div class="trick-box">
+                        <strong>🎯 DESIGN TRICK:</strong> Start with a proven baseline (e.g., ARM Cortex-A78 specs) and modify ONE key aspect. Trying to innovate everywhere makes debugging impossible.
+                    </div>
+                    
+                    <h4>B. Memory Subsystem Design</h4>
+                    <div class="code-example">
+CACHE HIERARCHY EXAMPLE:
+────────────────────────────────────
+L1 Instruction Cache:
+- Size: 64KB per core
+- Associativity: 4-way
+- Line size: 64 bytes
+- Latency: 3-4 cycles
+- Virtually indexed, physically tagged (VIPT)
+
+L1 Data Cache:
+- Size: 32KB per core
+- Associativity: 8-way
+- Line size: 64 bytes
+- Latency: 4-5 cycles
+- Write-back, write-allocate
+
+L2 Private Cache:
+- Size: 512KB per core
+- Associativity: 8-way
+- Line size: 64 bytes
+- Latency: 12-15 cycles
+- Inclusive of L1
+
+L3 Shared Cache (LLC):
+- Size: 2MB per core (16MB for 8 cores)
+- Associativity: 16-way
+- Line size: 64 bytes
+- Latency: 40-50 cycles
+- Non-inclusive, MESIF protocol
+                    </div>
+                    
+                    <div class="pro-tip">
